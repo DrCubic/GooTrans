@@ -72,6 +72,15 @@ class TransThread(threading.Thread):
             self.process_response()
 
     def judge_en_ch(self, kw):
+        """
+        判断待翻译词是中文 还是 英文
+
+        Args:
+            kw : 待翻译的词汇
+
+        Returns:
+            False / True : 若为中文则返回False,否则返回True
+        """
         kw_ = kw.__repr__()
         pa = re.compile(r'\\x|\\u')
         finds = re.search(pa, kw_)
@@ -80,6 +89,16 @@ class TransThread(threading.Thread):
         return False
 
     def parse_html(self, content):
+        """
+        解析翻译页面，得到翻译结果并返回
+
+        Args:
+            content : 翻译页面内容
+
+        Returns:
+            res : 解析除的翻译词
+            None : 当解析失败的时候返回
+        """
         try:
             soup = BeautifulSoup(content, 'html5lib')
             res = soup.find_all('span', id='result_box')[0].get_text().strip()
